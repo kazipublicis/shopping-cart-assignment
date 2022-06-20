@@ -6,7 +6,7 @@ export default function Section({
   title,
   desc,
   buttonText,
-  //   imageAlt,
+  imageAlt,
   alter,
 }) {
   return (
@@ -31,7 +31,7 @@ export default function Section({
               className=""
               style={{ height: "300px" }}
               src={image}
-              alt={""}
+              alt={imageAlt}
             />
           </>
         ) : (
@@ -40,7 +40,7 @@ export default function Section({
               className=""
               style={{ height: "300px" }}
               src={image}
-              alt={""}
+              alt={imageAlt}
             />
             <div className="items-center justify-center flex flex-col">
               <h2 className="text-2xl font-semibold">{title}</h2>

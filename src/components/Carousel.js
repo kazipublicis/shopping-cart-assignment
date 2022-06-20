@@ -21,8 +21,12 @@ export default function Carousl({ banners }) {
       }}
     >
       <Carousel
+        selectedItem={0}
         interval={2000}
         showThumbs={false}
+        infiniteLoop={true}
+        autoPlay={true}
+        swipeable={true}
         statusFormatter={() => ""}
         renderIndicator={(onClickHandler, isSelected, index, label) => {
           if (isSelected) {
@@ -55,7 +59,7 @@ export default function Carousl({ banners }) {
               <img
                 src={`${e.bannerImageUrl}`}
                 className="block w-full"
-                alt="Motorbike Smoke"
+                alt={e.bannerImageAlt}
               />
             </div>
           );

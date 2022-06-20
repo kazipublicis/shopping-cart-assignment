@@ -54,7 +54,7 @@ export default function Home() {
             <Section
               key={key}
               image={e.imageUrl}
-              imageAlt={e.name}
+              imageAlt={"cat-" + e.name}
               title={e.name}
               desc={e.description}
               buttonText={"Explore " + e.name}
@@ -65,7 +65,7 @@ export default function Home() {
       </main>
       <footer
         className="w-full"
-        style={{ "background-color": "rgba(0, 0, 0, 0.2)" }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
       >
         <div className="container mx-auto px-10 text-gray-700 p-4 ml-6">
           {`Copyright © 2011- ${new Date().getFullYear()}`}
