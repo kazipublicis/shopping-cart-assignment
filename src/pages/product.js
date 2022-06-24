@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from "react";
 import CartContext from "../context/cart";
-import { Header } from "../components";
+import { Header, Sidebar, MobileMenu } from "../components";
 import { Api } from "../helper/service";
 
 export default function product() {
@@ -122,60 +122,38 @@ export default function product() {
 
   const total = () => {
     const { cart } = context;
-    return cart.map((i) => i.price * i.qty).reduce((prev, next) => prev + next);
+    const data = cart.map((i) => i.price * i.qty);
+    return data.length > 0 ? data.reduce((prev, next) => prev + next) : 0;
   };
 
   return (
     <>
       <Header cartClick={open} cart={context.cart} />
+      <MobileMenu
+        onClick={(e) => filter(e.id)}
+        options={categories}
+        value={selectedCategory}
+      />
       <section className="container mx-auto px-10 h-full">
-        <aside
-          id="sidebar"
-          className="bg-zinc-300 w-60"
-          style={{
-            top: "0px",
-            bottom: "0",
-            position: "absolute",
-            marginTop: "105px",
-            height: "100%",
-            paddingBottom: "101%",
-          }}
-          aria-label="Sidebar"
+        <Sidebar
+          categories={categories}
+          filter={filter}
+          selectedCategory={selectedCategory}
+        />
+        <section
+          id="products"
+          className="flex flex-wrap -mx-2 overflow-hidden sm:-mx-3 md:-mx-2 lg:-mx-2 xl:-mx-2 allproducts"
         >
-          <ul>
-            {categories.map((c, key) => {
-              return (
-                <li
-                  key={key}
-                  className={`sidebar_elements ${
-                    selectedCategory == c.id ? "selected" : ""
-                  } `}
-                >
-                  <button
-                    className={`hover:text-rose-800 focus:text-rose-800 ${
-                      selectedCategory == c.id ? "text-white" : ""
-                    }`}
-                    onClick={() => filter(c.id)}
-                    aria-label={c.name}
-                  >
-                    {c.name}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </aside>
-        <section id="products" className="ml-64 grid-container mt-4">
           {products.map((p, key) => {
             return (
               <article
                 key={key}
-                className=""
+                className="my-6 px-2 w-full overflow-hidden sm:my-3 sm:px-3 sm:w-full md:my-2 md:px-2 md:w-1/2 lg:my-6 lg:px-2 lg:w-1/4 xl:my-6 xl:px-2 xl:w-1/4"
                 style={{ borderBottom: "2px dotted grey" }}
               >
                 <h2 className="font-semibold h-12">{p.name}</h2>
                 <img
-                  className="h-52 w-5/6 center-align"
+                  className="h-52 w-5/6 center-align productImg"
                   src={p.imageURL}
                   alt={p.sku}
                 />
@@ -221,6 +199,7 @@ export default function product() {
                   <div className="ml-3 flex h-7 items-center ">
                     <button
                       type="button"
+                      aria-label="Close"
                       className="-m-2 p-2 text-gray-400 hover:text-gray-500"
                       onClick={() => close()}
                     >
@@ -243,60 +222,88 @@ export default function product() {
                     </button>
                   </div>
                 </div>
-                <div className="mt-8">
-                  <div className="flow-root">
-                    <ul className="-my-6 divide-y divide-gray-200">
-                      {context.cart.map((p, key) => (
-                        <li key={key} className="flex py-3 bg-white px-3">
-                          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                            <img
-                              src={p.imageURL}
-                              alt={p.name}
-                              className="h-full w-full object-cover object-center"
-                            />
-                          </div>
-
-                          <div className="ml-4 flex flex-1 flex-col">
-                            <div className="flex justify-between text-base font-medium text-gray-900">
-                              <h3 className="font-semibold">{p.name}</h3>
+                <div className="mt-8 h-full">
+                  {context.cart.length > 0 ? (
+                    <div className="flow-root">
+                      <ul className="-my-6 divide-y divide-gray-200">
+                        {context.cart.map((p, key) => (
+                          <li key={key} className="flex py-3 bg-white px-3">
+                            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                              <img
+                                src={p.imageURL}
+                                alt={p.name}
+                                className="h-full w-full object-cover object-center"
+                              />
                             </div>
-                            <div className="flex flex-1 justify-between">
-                              <div className="flex flex-row items-center">
-                                <button onClick={() => decreseQty(p.id)}>
-                                  <p className="px-2 bg-[#d01755] rounded-full text-center text-white font-semibold">
-                                    -
+
+                            <div className="ml-4 flex flex-1 flex-col">
+                              <div className="flex justify-between text-base font-medium text-gray-900">
+                                <h3 className="font-semibold">{p.name}</h3>
+                              </div>
+                              <div className="flex flex-1 justify-between">
+                                <div className="flex flex-row items-center">
+                                  <button onClick={() => decreseQty(p.id)}>
+                                    <p className="px-2 bg-[#d01755] rounded-full text-center text-white font-semibold">
+                                      -
+                                    </p>
+                                  </button>
+                                  <p className="ml-2">{p.qty}</p>
+                                  <button onClick={() => increaseQty(p.id)}>
+                                    <p className="px-2 bg-[#d01755] rounded-full text-center text-white ml-2 font-semibold">
+                                      +
+                                    </p>
+                                  </button>
+                                  <p className="ml-6"> * </p>
+                                  <p className="ml-6">{p.price}</p>
+                                  <p className="ml-7 sm:ml-24">
+                                    Rs {p.price * p.qty}{" "}
                                   </p>
-                                </button>
-                                <p className="ml-2">{p.qty}</p>
-                                <button onClick={() => increaseQty(p.id)}>
-                                  <p className="px-2 bg-[#d01755] rounded-full text-center text-white ml-2 font-semibold">
-                                    +
-                                  </p>
-                                </button>
-                                <p className="ml-6"> * </p>
-                                <p className="ml-6">{p.price}</p>
-                                <p className="ml-24">Rs {p.price * p.qty} </p>
-                                <p></p>
+                                  <p></p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="h-full flex justify-center items-center flex-col">
+                      <p className="font-semibold text-lg">
+                        No Items in your cart
+                      </p>
+                      <p>Your favourite items are just a click away</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="border-t border-gray-200 py-2 px-2 sm:px-2 ">
-                <p className="text-sm text-black text-center">
-                  Promo code can be applied on Payment page
-                </p>
-                <div className="mt-2 w-full flex rounded-[4px] bg-[#d01755]">
-                  <button className=" w-full px-4 py-3 font-semibold text-white flex flex-row items-center justify-between">
-                    <p>Proceed to Checkout</p>
-                    <p>Rs {total()}</p>
-                  </button>
-                </div>
+                {context.cart.length > 0 ? (
+                  <>
+                    <p className="text-sm text-black text-center">
+                      Promo code can be applied on Payment page
+                    </p>
+                    <div className="mt-2 w-full flex rounded-[4px] bg-[#d01755]">
+                      <button className=" w-full px-4 py-3 text-white flex flex-row items-center justify-between">
+                        <p className="font-semibold">Proceed to Checkout</p>
+                        <p className="font-semibold">Rs {total()}</p>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mt-2 w-full flex rounded-[4px] bg-[#d01755]">
+                      <button
+                        onClick={close}
+                        className=" w-full px-4 py-3 text-white flex items-center"
+                      >
+                        <p className="text-center font-semibold w-full">
+                          Start Shopping
+                        </p>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

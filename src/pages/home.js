@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
-import { Header, Carousel, Section } from "../components";
+import { Header, Carousel, Section, Footer } from "../components";
 import { Api } from "../helper/service";
 
 export default function Home() {
@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="container mx-auto px-10 w-full flex flex-wrap items-center justify-between">
+      <main className="container mx-auto sm:px-0 md:px-8 lg:px-10 w-full flex flex-wrap items-center justify-between">
         <Carousel banners={banners} />
         {categories.map((e, key) => {
           return (
@@ -63,17 +63,7 @@ export default function Home() {
           );
         })}
       </main>
-      <footer
-        className="w-full"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
-      >
-        <div className="container mx-auto px-10 text-gray-700 p-4 ml-6">
-          {`Copyright © 2011- ${new Date().getFullYear()}`}
-          <a className="text-gray-800" href="https://tailwind-elements.com/">
-            Sabka Bazaar Grocery Supplies Pvt. Ltd.
-          </a>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

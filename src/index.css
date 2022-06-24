@@ -35,3 +35,30 @@ body{
   margin-left: auto;
   margin-right: auto;
 }
+.allproducts{
+  padding-left: 250px;
+}
+.productSelect{
+  display: none !important;
+}
+.collapse:not(.show) {
+  display: block !important;
+}
+
+@media (max-width: 767px) {
+  aside {
+    display: none;
+  }
+  .allproducts{
+    padding-left: 0px;
+  }
+  .productImg{
+    width: 45% !important;
+    float: left;
+    height: auto !important;
+    margin-right: 8px;
+  }
+  .productSelect{
+    display: block !important;
+  }
+}
